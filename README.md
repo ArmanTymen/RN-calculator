@@ -1,97 +1,50 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+npx react-native start --reset-cache
+npx react-native run-android --no-packager
+npx react-native run-android --mode release
+Для метрик запускай ТОЛЬКО npx react-native run-android --mode profile для андройд студио 
 
-# Getting Started
+Ответ Gemini
+Логи говорят нам о двух критических проблемах: отсутствие модулей и несоответствие типов пакета. Твой конфиг eslint.config.js использует современный синтаксис (ESM), но проект об этом не знает, и половины пакетов просто нет в папке node_modules.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
 
-## Step 1: Start Metro
+3. Про «код, который бегает по всему приложению»
+Тот скрипт, что ты скинул (Husky + lint-staged) — это и есть «охранник». Он делает следующее:
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+npx lint-staged: Запускает линтер и претиер только для тех файлов, которые ты изменил и хочешь закоммитить. Это быстро.
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+npx tsc --noEmit: А вот это — самая важная проверка. Она сканирует весь проект на ошибки типизации TypeScript, не создавая при этом лишних файлов. Если ты где-то в другом конце проекта сломал контракт данных, этот код не даст тебе сделать коммит.
 
-```sh
-# Using npm
-npm start
+Чтобы проверить весь проект прямо сейчас вручную (не дожидаясь коммита), используй:
 
-# OR using Yarn
-yarn start
-```
+Для типов: npx tsc --noEmit
 
-## Step 2: Build and run your app
+Для линта: npx eslint . (точка значит «весь проект»)
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+<!-- Почему все так долго делается? на Капаситор все быстро открывалось, а щас все долго.  -->
 
-### Android
+<!-- Кредит. График платежей, править отступ внизу, График платеже наверх табов налезает.  -->
 
-```sh
-# Using npm
-npm run android
+<!-- В селекте где выбирается тип кредита, нету понимания что это именно выбор, в капаситор там был круглый чекбокс, который показывал на чем щас выбор, его надо и тут сделать мне кажется. -->
 
-# OR using Yarn
-yarn android
-```
+<!-- console.js:668 Error: Uncaught (in promise, id: 0): "ReferenceError: Property 'crypto' doesn't exist"
+Caused by: ReferenceError: Property 'crypto' doesn't exist
+    at addEarlyRepayment (useCreditForm.ts:33:57)
+    at handleLocalSubmit (EarlyRepaymentForm.tsx:31:13)
+Досрочные платежи ошибка.  -->
 
-### iOS
+<!-- Ипотека. Опять же, все так долго считается, я ждал секунд пять после ввода всех данных для кредита чтобы он вывел в Ежемесячный платеж корректные цифры.  -->
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+<!-- Налоговый вычет. Чек бокс Покупаем в браке, ну очень долго секунд 5-10 ждал пока он потвердится, и то я думал может я не попал по чек бокусу или что то еще.  -->
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+<!-- После заполнения полей, у меня почему то висит незнаю как называется правильно, когда ты заполняешь поле и закрываешь клавиатуру, у тебя не должно нигде быть привязки такой которая открывает клавиатуру автоматом, выйдя из График платежей, идет сразу привязка к Срок и открывается клавиатура, хотя он мне вообще не нужна. -->
 
-```sh
-bundle install
-```
+<!-- В самой кредит и ипотека странице скролл маленький, когда я заполняю поле ставка например, у меня скролла вниз только до середины Дополнительные возможности кнопоу, нужно закрывать окно чтобы увидеть их полностью. Хз должно так быть или нет, как будто бы нет. -->
 
-Then, and every time you update your native dependencies, run:
 
-```sh
-bundle exec pod install
-```
+<!-- Как получается так что месяцы в графике могут повторятся два раза? Например у меня март 2038 два раза подряд вышел и ошибка показала ключей. -->
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+<!-- Что можно сделать со списком в графике? для ипотеки тут как будто бы не работает Флат лист, если он должен работать как танстак виртуалайзер, или тут все таки есть предел скролла? если я скролю быстро то он и не будет помогать никак? будут все равно белые части где нет контента и через секунду заполняют. Если не делать скролл как бешенный то +- норм вроде. -->
 
-```sh
-# Using npm
-npm run ios
+<!-- На кнопки надо спиннеры повесить, чтобы было понимание что она нажата, бывает немного подвисает. (Досрочные платежи = Добавить в расчет). Это не будет дорого в производительности? -->
 
-# OR using Yarn
-yarn ios
-```
-
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
-
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
-
-## Step 3: Modify your app
-
-Now that you have successfully run the app, let's make changes!
-
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
-
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
-
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+Итоговый чек-лист перед App Store:ИнструментЧто проверяемСтатус у тебяFlashlightПлавность (FPS), нагрузка на железоDONE (95-98 балов — топ)SentryПадения (Crashes), ошибки в логикеНужно поставитьFirebase Test LabРабота на слабых Android-смартфонахЖелательно перед релизомManual QAГраничные значения (например, ипотека на 1000 лет)Проверить вручную

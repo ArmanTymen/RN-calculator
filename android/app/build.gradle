@@ -104,6 +104,19 @@ android {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
+        profile {
+        initWith release
+        debuggable true
+        matchingFallbacks = ['release']
+        manifestPlaceholders = [usesCleartextTraffic: "false"]
+
+        // ФОРСИРУЕМ RELEASE ДЛЯ C++ КОДА
+        externalNativeBuild {
+            cmake {
+                arguments "-DCMAKE_BUILD_TYPE=Release"
+            }
+        }
+    }
     }
 }
 
