@@ -1,17 +1,20 @@
-import { Modal, View, Text, Pressable } from 'react-native'
-import { X, Check } from 'lucide-react-native'
+import React from 'react'
+import { View, Text, Pressable, ScrollView } from 'react-native'
+import { Check } from 'lucide-react-native'
 import { useFormContext, useWatch, Controller } from 'react-hook-form'
-import { MortgageFormValues, useDeductions } from '@/entities/mortgage'
-import { ScheduleRow } from '@/entities/credit'
+import { MortgageFormValues, useDeductions } from '@/entities/calculators/mortgage'
+import { ScheduleRow } from '@/entities/calculators/credit'
+import { BottomSheetModal } from '../../bottom-sheet-modal'
 
 interface Props {
   isOpen: boolean
   onClose: () => void
   scheduleData: ScheduleRow[]
 }
-const formatMoney = (val: number) => Math.round(val).toLocaleString('ru-RU') + ' ₽'
 
-export const DeductionsModal = ({ isOpen, onClose, scheduleData }: Props) => {
+const formatMoney = (val: number): string => Math.round(val).toLocaleString('ru-RU') + ' ₽'
+
+export const DeductionsModal = ({ isOpen, onClose, scheduleData }: Props): React.JSX.Element => {
   const { control } = useFormContext<MortgageFormValues>()
   const propertyPrice = useWatch({ control, name: 'propertyPrice' }) || 0
   const isMarried = useWatch({ control, name: 'deductions.isMarried' }) || false
@@ -23,74 +26,68 @@ export const DeductionsModal = ({ isOpen, onClose, scheduleData }: Props) => {
   })
 
   return (
-    <Modal visible={isOpen} transparent animationType="slide" onRequestClose={onClose}>
-      <View className="flex-1 justify-end bg-slate-900/50">
-        <View className="h-[85%] w-full flex-col rounded-t-3xl bg-white shadow-xl">
-          <View className="flex-row items-center justify-between border-b border-slate-100 p-4">
-            <Text className="text-lg font-bold text-slate-900">Налоговый вычет</Text>
-            <Pressable onPress={onClose} className="rounded-full bg-slate-100 p-2">
-              <X color="#64748b" size={20} />
-            </Pressable>
-          </View>
+    <BottomSheetModal isOpen={isOpen} onClose={onClose} title="Налоговый вычет">
+      <ScrollView showsVerticalScrollIndicator={false} className="flex-1 px-6 pt-6">
+        <Text className="mb-6 text-sm leading-5 text-slate-500">
+          Государство позволяет вернуть 13% от стоимости жилья и фактически уплаченных процентов.
+          Лимит на покупку — 2 млн ₽ (возврат 260к), на проценты — 3 млн ₽ (возврат 390к).
+        </Text>
 
-          <View className="flex-1 p-6">
-            <Text className="mb-6 text-sm text-slate-500">
-              Государство позволяет вернуть 13% от стоимости жилья и фактически уплаченных
-              процентов...
-            </Text>
-
-            <Controller
-              control={control}
-              name="deductions.isMarried"
-              render={({ field: { onChange, value } }) => (
-                <Pressable
-                  onPress={() => onChange(!value)}
-                  className="mb-6 flex-row items-start gap-3 rounded-xl border border-slate-200 p-4"
-                >
-                  <View
-                    className={`mt-1 h-5 w-5 items-center justify-center rounded border ${value ? 'border-blue-600 bg-blue-600' : 'border-slate-300'}`}
-                  >
-                    {value && <Check color="white" size={14} />}
-                  </View>
-                  <View className="flex-1 flex-col">
-                    <Text className="font-medium text-slate-900">Покупаем в браке</Text>
-                    <Text className="mt-1 text-xs text-slate-500">
-                      Лимиты вычета удваиваются и распределяются на обоих супругов
-                    </Text>
-                  </View>
-                </Pressable>
-              )}
-            />
-
-            <View className="rounded-2xl bg-green-50 p-5">
-              <Text className="mb-4 text-sm font-semibold text-green-800">Сумма к возврату:</Text>
-
-              <View className="flex-col gap-3">
-                <View className="flex-row justify-between">
-                  <Text className="text-sm text-slate-600">За покупку недвижимости:</Text>
-                  <Text className="text-sm font-bold text-slate-900">
-                    {formatMoney(propertyDeduction)}
-                  </Text>
-                </View>
-
-                <View className="flex-row justify-between">
-                  <Text className="text-sm text-slate-600">За проценты по ипотеке:</Text>
-                  <Text className="text-sm font-bold text-slate-900">
-                    {formatMoney(interestDeduction)}
-                  </Text>
-                </View>
-
-                <View className="mt-2 flex-row justify-between border-t border-green-200 pt-3">
-                  <Text className="font-bold text-green-900">Итого можно вернуть:</Text>
-                  <Text className="text-xl font-black text-green-600">
-                    {formatMoney(totalDeduction)}
-                  </Text>
-                </View>
+        <Controller
+          control={control}
+          name="deductions.isMarried"
+          render={({ field: { onChange, value } }) => (
+            <Pressable
+              onPress={() => onChange(!value)}
+              className="mb-6 flex-row items-start gap-4 rounded-2xl border border-slate-100 bg-slate-50 p-4 active:bg-slate-100"
+            >
+              <View
+                className={`mt-1 h-6 w-6 items-center justify-center rounded-lg border ${
+                  value ? 'border-blue-600 bg-blue-600' : 'border-slate-300 bg-white'
+                }`}
+              >
+                {value && <Check color="white" size={16} strokeWidth={3} />}
               </View>
+              <View className="flex-1 flex-col">
+                <Text className="text-base font-bold text-slate-900">Покупаем в браке</Text>
+                <Text className="mt-1 text-xs leading-4 text-slate-500">
+                  Лимиты вычета удваиваются и распределяются на обоих супругов (до 1.3 млн ₽
+                  суммарно)
+                </Text>
+              </View>
+            </Pressable>
+          )}
+        />
+
+        <View className="mb-10 rounded-3xl border border-emerald-100 bg-emerald-50 p-6">
+          <Text className="mb-4 text-sm font-bold uppercase tracking-wider text-emerald-800">
+            Сумма к возврату
+          </Text>
+
+          <View className="flex-col gap-4">
+            <View className="flex-row items-center justify-between">
+              <Text className="text-slate-600">За покупку дома:</Text>
+              <Text className="text-base font-bold text-slate-900">
+                {formatMoney(propertyDeduction)}
+              </Text>
+            </View>
+
+            <View className="flex-row items-center justify-between">
+              <Text className="text-slate-600">За проценты:</Text>
+              <Text className="text-base font-bold text-slate-900">
+                {formatMoney(interestDeduction)}
+              </Text>
+            </View>
+
+            <View className="mt-2 flex-row items-center justify-between border-t border-emerald-200 pt-4">
+              <Text className="font-bold text-emerald-900">Итого вернуть:</Text>
+              <Text className="text-2xl font-black text-emerald-600">
+                {formatMoney(totalDeduction)}
+              </Text>
             </View>
           </View>
         </View>
-      </View>
-    </Modal>
+      </ScrollView>
+    </BottomSheetModal>
   )
 }

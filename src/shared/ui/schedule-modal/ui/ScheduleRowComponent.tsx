@@ -1,4 +1,4 @@
-import { ScheduleRow } from '@/entities/credit/model/types'
+import { ScheduleRow } from '@/entities/calculators/credit/model/types'
 import React from 'react'
 import { Text, View } from 'react-native'
 

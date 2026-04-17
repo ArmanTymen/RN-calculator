@@ -1,4 +1,4 @@
-import { InfoDashboard } from '@/widgets/info-dashboard'
+import { InfoDashboard } from '@/widgets/home-page/info-dashboard'
 import { View, Text, ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 

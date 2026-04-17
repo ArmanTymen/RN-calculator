@@ -1,8 +1,10 @@
-import { Modal, View, Text, Pressable, ScrollView } from 'react-native'
-import { X, Trash2 } from 'lucide-react-native'
-import { EarlyRepayment } from '@/entities/credit'
-import { EarlyRepaymentForm } from '@/features/repayment-add'
+import React from 'react'
+import { View, Text, Pressable, ScrollView } from 'react-native'
+import { Trash2 } from 'lucide-react-native'
+import { EarlyRepayment } from '@/entities/calculators/credit'
 import { formatMonthIndexToDate } from '@/shared/lib'
+import { EarlyRepaymentForm } from './EarlyRepaymentForm'
+import { BottomSheetModal } from '../../bottom-sheet-modal'
 
 interface Props {
   isOpen: boolean
@@ -20,58 +22,66 @@ export const EarlyRepaymentModal = ({
   onRemove,
   items,
   maxMonths,
-}: Props) => {
+}: Props): React.JSX.Element => {
   return (
-    <Modal visible={isOpen} transparent animationType="slide" onRequestClose={onClose}>
-      <View className="flex-1 justify-end bg-slate-900/50">
-        <View className="h-[85%] w-full flex-col rounded-t-3xl bg-white shadow-xl">
-          <View className="flex-row items-center justify-between border-b border-slate-100 p-4">
-            <Text className="text-lg font-bold text-slate-900">Досрочные платежи</Text>
-            <Pressable onPress={onClose} className="rounded-full bg-slate-100 p-2">
-              <X color="#64748b" size={20} />
-            </Pressable>
-          </View>
+    <BottomSheetModal
+      isOpen={isOpen}
+      onClose={onClose}
+      title="Досрочные платежи"
+      enableKeyboardHandling={true}
+    >
+      <View className="flex-1">
+        <View className="border-b border-slate-100 bg-slate-50/30 pb-2">
+          <EarlyRepaymentForm onSubmit={onAdd} maxMonths={maxMonths} />
+        </View>
 
-          <View className="border-b border-slate-100 bg-slate-50/50">
-            <EarlyRepaymentForm onSubmit={onAdd} maxMonths={maxMonths} />
-          </View>
+        <ScrollView
+          className="flex-1 px-4 pt-4"
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+          nestedScrollEnabled
+        >
+          <Text className="mb-4 text-xs font-bold uppercase tracking-widest text-slate-400">
+            Добавленные операции
+          </Text>
 
-          <ScrollView className="flex-1 p-4">
-            <Text className="mb-3 text-xs font-semibold uppercase text-slate-400">
-              Добавленные платежи
-            </Text>
-
-            {items.length === 0 ? (
-              <Text className="py-10 text-center text-sm text-slate-400">Список пока пуст</Text>
-            ) : (
-              <View className="flex-col gap-3 pb-10">
-                {items.map((item) => (
-                  <View
-                    key={item.id}
-                    className="flex-row items-center justify-between rounded-2xl border border-slate-100 p-3"
-                  >
-                    <View>
-                      <Text className="text-sm font-bold text-slate-900">
-                        {new Intl.NumberFormat('ru-RU').format(item.amount)} ₽
+          {items.length === 0 ? (
+            <View className="items-center py-12">
+              <Text className="text-sm text-slate-400">Список пока пуст</Text>
+            </View>
+          ) : (
+            <View className="flex-col gap-3 pb-10">
+              {items.map((item) => (
+                <View
+                  key={item.id}
+                  className="flex-row items-center justify-between rounded-2xl border border-slate-100 bg-white p-4 shadow-sm"
+                >
+                  <View className="flex-col gap-1">
+                    <Text className="text-base font-bold text-slate-900">
+                      {new Intl.NumberFormat('ru-RU').format(item.amount)} ₽
+                    </Text>
+                    <View className="flex-row items-center">
+                      <Text className="text-xs font-medium text-slate-500">
+                        {formatMonthIndexToDate(item.month)}
                       </Text>
-                      <Text className="mt-1 text-[10px] text-slate-500">
-                        Дата: {formatMonthIndexToDate(item.month)} •{' '}
-                        {item.strategy === 'reduce_term' ? 'Срок' : 'Платеж'}
+                      <View className="mx-2 h-1 w-1 rounded-full bg-slate-300" />
+                      <Text className="text-xs font-medium text-blue-600">
+                        {item.strategy === 'reduce_term' ? 'Сократить срок' : 'Снизить платеж'}
                       </Text>
                     </View>
-                    <Pressable
-                      onPress={() => onRemove(item.id)}
-                      className="rounded-xl bg-red-50 p-2 active:bg-red-100"
-                    >
-                      <Trash2 color="#ef4444" size={16} />
-                    </Pressable>
                   </View>
-                ))}
-              </View>
-            )}
-          </ScrollView>
-        </View>
+                  <Pressable
+                    onPress={() => onRemove(item.id)}
+                    className="h-10 w-10 items-center justify-center rounded-xl bg-red-50 active:bg-red-100"
+                  >
+                    <Trash2 color="#ef4444" size={18} />
+                  </Pressable>
+                </View>
+              ))}
+            </View>
+          )}
+        </ScrollView>
       </View>
-    </Modal>
+    </BottomSheetModal>
   )
 }

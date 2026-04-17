@@ -2,9 +2,9 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Home, Calculator, ArrowLeftRight, Settings as SettingsIcon } from 'lucide-react-native'
 import { HomePage } from '@/pages/home-page'
 import { Settings } from '@/pages/settings'
-import { Converter } from '@/pages/сonverter'
 import { CalculatorStack } from './CalculatorStack'
 import { RootParamList } from '@/shared/lib/navigation/types'
+import { ConverterPage } from '@/pages/сonverter'
 
 const Tab = createBottomTabNavigator<RootParamList>()
 
@@ -33,8 +33,8 @@ export const TabNavigator = () => (
       }}
     />
     <Tab.Screen
-      name="Converter"
-      component={Converter}
+      name="ConverterPage"
+      component={ConverterPage}
       options={{
         tabBarLabel: 'Конвертер',
         tabBarIcon: ({ color, size }) => <ArrowLeftRight color={color} size={size} />,

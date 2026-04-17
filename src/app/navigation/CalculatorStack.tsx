@@ -6,7 +6,7 @@ import { ExchangePage } from '@/pages/calculators/currency-converter-page'
 import { MortgagePage } from '@/pages/calculators/mortgage-page'
 import { PercentagePage } from '@/pages/calculators/percentage-page'
 import { SavingsPage } from '@/pages/calculators/savings-page/ui/SavingsPage'
-import { TaxPage } from '@/pages/calculators/tax-page'
+import { PersonalTaxIncomePage } from '@/pages/calculators/personal-income-tax-page'
 import { VacationPage } from '@/pages/calculators/vacation-page'
 import { CalculatorStackParamList } from '@/shared/lib/navigation/types'
 import { PropertyTaxDeductionPage } from '@/pages/calculators/property-tax-page'
@@ -23,7 +23,7 @@ export const CalculatorStack = () => {
       <Stack.Screen name="MortgagePage" component={MortgagePage} />
       <Stack.Screen name="PercentagePage" component={PercentagePage} />
       <Stack.Screen name="SavingsPage" component={SavingsPage} />
-      <Stack.Screen name="TaxPage" component={TaxPage} />
+      <Stack.Screen name="PersonalTaxIncomePage" component={PersonalTaxIncomePage} />
       <Stack.Screen name="PropertyTaxDeductionPage" component={PropertyTaxDeductionPage} />
       <Stack.Screen name="VacationPage" component={VacationPage} />
     </Stack.Navigator>

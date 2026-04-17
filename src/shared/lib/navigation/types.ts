@@ -6,7 +6,7 @@ export type CalculatorStackParamList = {
   CreditPage: undefined
   MortgagePage: undefined
   SavingsPage: undefined
-  TaxPage: undefined
+  PersonalTaxIncomePage: undefined
   PropertyTaxDeductionPage: undefined
   VacationPage: undefined
 }
@@ -15,7 +15,7 @@ export type RootParamList = {
   HomePage: undefined
   Settings: undefined
   Calculators: undefined
-  Converter: undefined
+  ConverterPage: undefined
 }
 
 export type AllScreensParamList = RootParamList & CalculatorStackParamList

@@ -1,1 +1,1 @@
-export { Converter } from './ui/Converter'
+export { ConverterPage } from './ui/ConverterPage'
